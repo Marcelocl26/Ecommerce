@@ -19,10 +19,10 @@ const Cart = () => {
       }
     };
 
-    if (cart.length === 0) {  // Solo fetch si el carrito está vacío
+    if (cart.length === 0) {  
       fetchData();
     } else {
-      setLoading(false); // No está cargando si ya hay productos
+      setLoading(false); 
     }
   }, [cart, fetchCartProducts]);
 
@@ -49,8 +49,8 @@ const Cart = () => {
   const handleCheckout = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/create-order', {
-        amount: Math.round(totalPrice), // Convertir el totalPrice a entero
-        email: 'cliente@example.com' // Reemplaza con el email del usuario
+        amount: Math.round(totalPrice), 
+        email: 'cliente@example.com' 
       });
       window.location.href = response.data.url;
     } catch (error) {
