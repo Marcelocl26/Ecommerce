@@ -16,7 +16,7 @@ function Header() {
   return (
     <header>
       <nav>
-        {/* Otras partes del encabezado */}
+        {}
         <button onClick={handleLoginClick}>Iniciar Sesión</button>
       </nav>
       {showLoginModal && (
