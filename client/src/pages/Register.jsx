@@ -13,7 +13,6 @@ function Register() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/api/register', { username, email, password });
-            // Manejar la respuesta del registro (puedes redirigir al usuario a la página de inicio de sesión, mostrar un mensaje de éxito, etc.)
             navigate('/login');
         } catch (err) {
             setError('Error al registrar usuario');
