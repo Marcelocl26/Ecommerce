@@ -20,18 +20,18 @@ function App() {
             <div className="app">
                 <WhiteNavbar />
                 <Navbar />
-                <div className="content pt-32"> {/* Ajusta el padding top según sea necesario */}
+                <div className="content pt-32"> {}
                     <Routes>
                         <Route path="/" element={<StoreHome />} />
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/product/:id" element={<ProductDetails />} />
-                        <Route path="/profile" element={<Profile />} /> {/* Nueva ruta */}
+                        <Route path="/profile" element={<Profile />} /> {}
                         <Route path="/categories" element={<Categories />} />
                         <Route path="/category/:categoryName" element={<CategoryProducts />} />
                         <Route path="/favorites" element={<FavoritesPage/>} />
-                        <Route path="/search" element={<SearchResults />} /> {/* Ruta de búsqueda */}
+                        <Route path="/search" element={<SearchResults />} /> {}
 
                     </Routes>
                 </div>
