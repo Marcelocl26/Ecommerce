@@ -1,0 +1,33 @@
+/* Categories.css */
+
+.categories-container {
+  background-color: #1E3A8A; /* Fondo azul para la barra de categorías */
+  color: #FFFFFF; /* Texto blanco para las categorías */
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow-x: auto; /* Permite el scroll horizontal si hay muchas categorías */
+}
+
+.category-card {
+  background-color: transparent; /* Fondo transparente para cada tarjeta de categoría */
+  color: #FFFFFF; /* Texto blanco */
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.category-card:hover {
+  background-color: #3B82F6; /* Cambia de color al pasar el mouse */
+}
+
+.category-image {
+  width: 50px; /* Tamaño pequeño para las imágenes de categoría */
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%; /* Imágenes redondas */
+  margin-bottom: 0.5rem;
+}

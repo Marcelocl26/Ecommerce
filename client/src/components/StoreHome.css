@@ -1,0 +1,33 @@
+/* src/components/StoreHome.css */
+
+.products-container {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 20px;
+     justify-content: center;
+   }
+   
+   .product-card {
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     padding: 16px;
+     width: 200px;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+     text-align: center;
+   }
+   
+   .product-image {
+     max-width: 100%;
+     height: auto;
+     border-radius: 4px;
+   }
+   
+   .product-card h3 {
+     margin: 10px 0;
+   }
+   
+   .product-card p {
+     color: #555;
+     font-size: 14px;
+   }
+   
