@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SearchBar from './SearchBar'; // Importa el componente SearchBar aquí
+import SearchBar from './SearchBar'; 
 
 const WhiteNavbar = () => {
   return (
@@ -11,7 +11,7 @@ const WhiteNavbar = () => {
         </Link>
       </div>
       <div className="flex items-center">
-        {/* Aquí se incluye el componente SearchBar */}
+        {}
         <SearchBar />
         <Link to="/cart" className="ml-4 text-gray-800">
           Carrito
