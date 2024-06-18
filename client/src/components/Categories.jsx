@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './Categories.css'; // Asegúrate de crear este archivo para estilos personalizados
+import './Categories.css'; 
 
 function Categories() {
   const [categories, setCategories] = useState([]);
