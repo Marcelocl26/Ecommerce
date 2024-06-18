@@ -18,11 +18,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-dotenv.config(); // Cargar las variables de entorno desde el archivo .env
+dotenv.config();
 
 // Configura CORS
 app.use(cors({
-  origin: 'http://localhost:5173', // Reemplaza con el origen de tu frontend
+  origin: 'http://localhost:5173', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
