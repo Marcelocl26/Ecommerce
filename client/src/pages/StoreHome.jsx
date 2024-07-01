@@ -31,7 +31,7 @@ function StoreHome() {
         console.error('Error fetching products:', error);
       });
     
-    // Fetching favorite products for the user
+   
     if (isAuthenticated) {
       axios.get('http://localhost:3000/api/favorites', {
         headers: {

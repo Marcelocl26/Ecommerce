@@ -1,25 +1,50 @@
-import React, { createContext, useState, useContext } from 'react';
+// context/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('http://localhost:3000/api/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        setUser(response.data);
         setIsAuthenticated(true);
-    };
-
-    const logout = () => {
-        localStorage.removeItem('token');
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
         setIsAuthenticated(false);
-    };
+        setUser(null);
+      });
+    }
+  }, []);
 
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const login = ({ token, user }) => {
+    setUser(user);
+    setIsAuthenticated(true);
+    localStorage.setItem('token', token);
+  };
+
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('token');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

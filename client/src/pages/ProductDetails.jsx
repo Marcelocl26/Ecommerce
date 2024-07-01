@@ -41,6 +41,10 @@ const ProductDetails = () => {
     }
   };
 
+  const handleImageError = (e) => {
+    e.target.src = 'https://via.placeholder.com/200'; // URL a una imagen predeterminada externa
+  };
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -56,8 +60,20 @@ const ProductDetails = () => {
   return (
     <div>
       <h1>{product.name}</h1>
+      {product.image && (
+        <img 
+          src={`http://localhost:3000/${product.image}`} 
+          alt={product.name} 
+          style={{ width: '200px' }} 
+          onError={handleImageError} 
+        />
+      )}
       <p>{product.description}</p>
       <p>Precio: ${product.price}</p>
+      <p>Categoría: {product.category}</p>
+      <p>Marca: {product.brand}</p>
+      <p>Disponibilidad: {product.countInStock > 0 ? 'En stock' : 'Agotado'}</p>
+      <p>Valoración: {product.rating} ({product.numReviews} reseñas)</p>
       <div>
         <button onClick={decreaseQuantity}>-</button>
         <span>{quantity}</span>

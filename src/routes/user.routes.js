@@ -1,7 +1,9 @@
+// user.routes.js
+
 import express from 'express';
-import { createUser, loginUser, logoutUser } from '../controllers/user.controllers.js';
+import { createUser, loginUser, logoutUser, getMe } from '../controllers/user.controllers.js';
 import { body, validationResult } from 'express-validator';
-import { authenticateUser } from '../middlewares/auth.middleware.js';
+import { authenticateUser, isAdmin } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -35,21 +37,28 @@ router.post('/login', [
   }
 
   try {
-    const token = await loginUser(req.body);
-    res.status(200).json({ token });
+    const { token, user } = await loginUser(req.body); // Asegúrate de obtener tanto el token como el usuario
+    res.status(200).json({ token, user }); // Devuelve ambos datos al cliente
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
 });
 
-// Ruta protegida para obtener datos del usuario
-router.get('/user', authenticateUser, (req, res) => {
+// Ruta protegida para obtener datos del usuario autenticado
+router.get('/me', authenticateUser, (req, res) => {
   res.status(200).json(req.user);
 });
 
 // Ruta para logout
 router.post('/logout', (req, res) => {
   res.clearCookie('token').json({ message: 'Logout exitoso' });
+});
+
+router.get('/me', authenticateUser, getMe);
+// Ruta protegida para administradores: Obtener compras
+router.get('/purchases', authenticateUser, isAdmin, (req, res) => {
+  // Implementa la lógica para obtener las compras
+  res.status(200).json({ message: 'Lista de compras' });
 });
 
 export default router;

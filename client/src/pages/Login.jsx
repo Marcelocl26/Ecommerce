@@ -14,14 +14,15 @@ function Login() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/api/login', { email, password });
-            const token = response.data.token;
-            localStorage.setItem('token', token);
-            login(token); // Pasar el token a la función de login
-            navigate('/');
+            const { token, user } = response.data;
+            localStorage.setItem('token', token); // Almacenar el token en localStorage
+            login({ token, user }); // Llamar a la función de login con el token y el usuario
+            navigate('/'); // Redirigir al usuario después de iniciar sesión
         } catch (err) {
             setError('Error al iniciar sesión');
         }
     };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
