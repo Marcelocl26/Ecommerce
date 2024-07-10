@@ -1,13 +1,12 @@
-import mercadopago from 'mercadopago';
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import Order from '../models/order.model.js';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-
-mercadopago.configure({
-  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+  options: { timeout: 5000 }
 });
 
 export const createOrder = async (req, res) => {
@@ -26,7 +25,8 @@ export const createOrder = async (req, res) => {
     quantity: product.quantity
   }));
 
-  const preference = {
+  const preference = new Preference(client);
+  const body = {
     items: products.map(product => ({
       title: product.name,
       quantity: product.quantity,
@@ -46,8 +46,7 @@ export const createOrder = async (req, res) => {
   };
 
   try {
-    const response = await mercadopago.preferences.create(preference);
-
+    const response = await preference.create({ body });
     res.json({ url: response.body.init_point });
   } catch (error) {
     console.error('Error creating order:', error);
@@ -75,8 +74,6 @@ export const handlePaymentNotification = async (req, res) => {
       });
 
       await newOrder.save();
-
-      // Redirigir al usuario a la página de compra exitosa
       res.redirect('http://localhost:5173/compra-exitosa');
     } else {
       console.log('Payment not approved:', collection_status);
@@ -87,7 +84,7 @@ export const handlePaymentNotification = async (req, res) => {
     res.status(500).send('Error handling payment notification');
   }
 };
-// Método para obtener todas las órdenes (solo accesible para administradores)
+
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().populate('userId').populate('products.productId');
@@ -96,7 +93,7 @@ export const getAllOrders = async (req, res) => {
     console.error(`Error fetching orders: ${error.message}`);
     res.status(500).json({ message: 'Ocurrió un error en el servidor' });
   }
-}
+};
 
 export const updateOrderStatus = async (req, res) => {
   try {

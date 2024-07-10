@@ -4,7 +4,7 @@ import Cart from '../models/cart.model.js';
 export const getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user._id }).populate('products.product');
-    console.log(cart); // Verifica la respuesta del servidor
+    console.log(cart); 
     res.json(cart);
   } catch (error) {
     console.error('Error al obtener el carrito:', error);
@@ -14,7 +14,7 @@ export const getCart = async (req, res) => {
 
 export const addToCart = async (req, res) => {
   try {
-    const { productId, quantity } = req.body; // Recupera productId y quantity
+    const { productId, quantity } = req.body; 
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -27,7 +27,7 @@ export const addToCart = async (req, res) => {
         $addToSet: {
           products: {
             product: product._id,
-            quantity: quantity || 1, // Usa la cantidad proporcionada o 1 por defecto
+            quantity: quantity || 1, 
             price: product.price,
           },
         },

@@ -12,8 +12,24 @@ export const getAllProducts = async (req, res) => {
 
 // Crear un producto
 export const createProduct = async (req, res) => {
-  const newProduct = new Product(req.body);
   try {
+    const { name, description, price, category, brand, countInStock, rating, numReviews } = req.body;
+
+    // Comprueba si hay archivos en req.files y construye un array de rutas de imagen
+    const images = req.files ? req.files.map(file => `/images/${file.filename}`) : [];
+
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      category,
+      brand,
+      images, // Guarda el array de rutas de imágenes
+      countInStock,
+      rating,
+      numReviews
+    });
+
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
@@ -34,7 +50,37 @@ export const getProductById = async (req, res) => {
 // Actualizar un producto
 export const updateProduct = async (req, res) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { id } = req.params;
+    const { name, description, price, category, brand, countInStock, rating, numReviews } = req.body;
+
+    const existingProduct = await Product.findById(id);
+
+    if (!existingProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Update product fields
+    existingProduct.name = name;
+    existingProduct.description = description;
+    existingProduct.price = price;
+    existingProduct.category = category;
+    existingProduct.brand = brand;
+    existingProduct.countInStock = countInStock;
+    existingProduct.rating = rating;
+    existingProduct.numReviews = numReviews;
+
+
+    const existingImages = req.body.existingImages ? req.body.existingImages.split(',') : [];
+    existingProduct.images = existingImages;
+
+   
+    if (req.files) {
+      req.files.forEach(file => {
+        existingProduct.images.push(`/images/${file.filename}`);
+      });
+    }
+
+    const updatedProduct = await existingProduct.save();
     res.json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: 'Error updating product', error });
@@ -51,12 +97,11 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-// Obtener productos filtrados por categoría
-// Obtener productos filtrados por categoría
+
 export const getProductsByCategory = async (req, res) => {
-  const category = req.params.category; // Obtener la categoría de los parámetros de la solicitud
+  const category = req.params.category; 
   try {
-    const products = await Product.find({ category: category }); // Buscar productos con la categoría proporcionada
+    const products = await Product.find({ category: category });
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products by category', error });

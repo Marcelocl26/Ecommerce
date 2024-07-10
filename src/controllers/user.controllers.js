@@ -34,7 +34,7 @@ export async function loginUser(userData) {
 }
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password'); // Excluye la contraseña
+    const user = await User.findById(req.user._id).select('-password');
     if (!user) {
       return res.status(404).send('Usuario no encontrado');
     }

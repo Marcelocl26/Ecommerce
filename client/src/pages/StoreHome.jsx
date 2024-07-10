@@ -1,28 +1,29 @@
-// src/pages/StoreHome.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import Categories from '../components/Categories';
-import { HeartIcon } from '@heroicons/react/solid'; // Importa el ícono de corazón desde Heroicons
-import './StoreHome.css'; // Importa el archivo CSS
+import Banner from '../components/Banner'; // Importa el componente Banner
+import { HeartIcon } from '@heroicons/react/solid';
+import './StoreHome.css';
 
 function StoreHome() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
-  const [favorites, setFavorites] = useState([]); // Estado para almacenar productos favoritos
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/products')
       .then(response => {
         const products = response.data;
         const groupedProducts = products.reduce((acc, product) => {
-          if (!acc[product.category]) {
-            acc[product.category] = [];
+          const categoryName = product.category || 'Uncategorized';
+          if (!acc[categoryName]) {
+            acc[categoryName] = [];
           }
-          acc[product.category].push(product);
+          acc[categoryName].push(product);
           return acc;
         }, {});
         setProductsByCategory(groupedProducts);
@@ -30,8 +31,7 @@ function StoreHome() {
       .catch(error => {
         console.error('Error fetching products:', error);
       });
-    
-   
+
     if (isAuthenticated) {
       axios.get('http://localhost:3000/api/favorites', {
         headers: {
@@ -97,6 +97,7 @@ function StoreHome() {
       <header className="store-header mb-4">
         <h1 className="text-3xl font-bold">¡Bienvenido a nuestra tienda!</h1>
       </header>
+      <Banner /> {/* Añade el componente Banner aquí */}
       <Categories />
       <main className="product-list">
         {Object.keys(productsByCategory).map(category => (
@@ -107,8 +108,8 @@ function StoreHome() {
                 <li key={product._id} className="product-item border p-4 rounded shadow">
                   <h3 className="text-xl font-medium">{product.name}</h3>
                   <p className="text-lg">Precio: ${product.price}</p>
-                  {product.image && (
-                    <img src={`http://localhost:3000/${product.image}`} alt={product.name} className="product-image w-full h-auto object-cover mb-4" />
+                  {product.images && product.images.length > 0 && (
+                    <img src={`http://localhost:3000/${product.images[0]}`} alt={product.name} className="product-image w-full h-auto object-cover mb-4" />
                   )}
                   <div className="product-actions flex justify-between items-center">
                     <button onClick={() => handleAddToCart(product)} className="bg-blue-500 text-white px-4 py-2 rounded">Añadir al carrito</button>

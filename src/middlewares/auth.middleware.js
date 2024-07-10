@@ -15,7 +15,7 @@ export function authenticateUser(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
-        req.user = { _id: decoded.id, role: decoded.role }; // Asegurar que req.user tenga la estructura correcta
+        req.user = { _id: decoded.id, role: decoded.role }; 
         next();
     } catch (error) {
         console.error('Error al verificar el token:', error);

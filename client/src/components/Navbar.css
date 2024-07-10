@@ -1,11 +1,10 @@
-/* src/components/Navbar.css */
 
 .navbar {
     background-color: #333;
     padding: 10px 20px;
     color: white;
     position: fixed;
-    top: 64px; /* Ajusta esta altura según la altura del WhiteNavbar */
+    top: 64px; 
     left: 0;
     width: 100%;
     z-index: 40;
@@ -14,10 +13,10 @@
 
 .navbar-container {
     display: flex;
-    justify-content: space-between; /* Espacio entre elementos */
+    justify-content: space-between; 
     align-items: center;
-    padding-left: 20px; /* Ajusta el espacio al comienzo */
-    padding-right: 20px; /* Ajusta el espacio al final */
+    padding-left: 20px; 
+    padding-right: 20px; 
 }
 
 .navbar-menu {
@@ -38,7 +37,7 @@
     padding: 5px 10px;
     transition: background-color 0.3s;
     display: flex;
-    align-items: center; /* Centrar el contenido del enlace verticalmente */
+    align-items: center; 
 }
 
 .navbar-link:hover {

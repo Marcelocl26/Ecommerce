@@ -19,6 +19,9 @@ import PaymentSuccess from './components/PaymentSuccess';
 import OrderList from './components/OrderList'; // Importa el componente de la lista de órdenes
 import AdminMenu from './components/AdminMenu';
 import ProductList from './pages/Product.list'; 
+import AddProductForm from './components/AddProductForm';
+
+import EditProduct from './components/EditProduct';
 
 
 
@@ -47,7 +50,9 @@ function App() {
                         <Route path="/orders" element={<OrderList />} /> {/* Agrega la ruta para la lista de órdenes */}
                         <Route path="/admin" element={<AdminMenu />} /> {/* Agrega la ruta para la lista de órdenes */}
                         <Route path="/admin/products" element={<ProductList />} /> {/* Agrega la ruta para la lista de órdenes */}
+                        <Route path="/admin/products/add" element={<AddProductForm />} />
 
+                        <Route path="/admin/products/edit/:productId" element={<EditProduct />} /> {/* Agrega la ruta para EditProduct */}
 
                     </Routes>
                 </div>

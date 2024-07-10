@@ -12,7 +12,7 @@ router.get('/payment-success', handlePaymentNotification);
 
 router.get('/orders',  authenticateUser,getOrders);
 router.get('/orders/admin',  authenticateUser,getOrders, isAdmin);
-router.get('/all', authenticateUser, isAdmin, getAllOrders); // Ruta para obtener todas las órdenes (solo accesible para administradores)
+router.get('/all', authenticateUser, isAdmin, getAllOrders);
 router.patch('/orders/:orderId', authenticateUser, updateOrderStatus);
 
 

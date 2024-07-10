@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['En proceso', 'Pagada', 'Cancelada'], // Añadir otros estados si es necesario
+    enum: ['En proceso', 'Pagada', 'Cancelada'], 
     default: 'En proceso'
   },
   createdAt: {

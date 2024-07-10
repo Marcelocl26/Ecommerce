@@ -1,4 +1,4 @@
-// user.routes.js
+
 
 import express from 'express';
 import { createUser, loginUser, logoutUser, getMe } from '../controllers/user.controllers.js';
@@ -37,8 +37,8 @@ router.post('/login', [
   }
 
   try {
-    const { token, user } = await loginUser(req.body); // Asegúrate de obtener tanto el token como el usuario
-    res.status(200).json({ token, user }); // Devuelve ambos datos al cliente
+    const { token, user } = await loginUser(req.body); 
+    res.status(200).json({ token, user });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
@@ -57,7 +57,7 @@ router.post('/logout', (req, res) => {
 router.get('/me', authenticateUser, getMe);
 // Ruta protegida para administradores: Obtener compras
 router.get('/purchases', authenticateUser, isAdmin, (req, res) => {
-  // Implementa la lógica para obtener las compras
+  
   res.status(200).json({ message: 'Lista de compras' });
 });
 
