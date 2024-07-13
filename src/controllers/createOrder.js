@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config(); // Cargar las variables de entorno desde el archivo .env
 
+// Imprime el token de acceso para verificar que se carga correctamente
 console.log('MercadoPago Access Token:', process.env.MERCADOPAGO_ACCESS_TOKEN);
 
 mercadopago.configure({
@@ -37,10 +38,16 @@ const createOrder = async (req, res) => {
 
   try {
     const response = await mercadopago.preferences.create(preference);
-    res.json({ url: response.body.init_point });
+    console.log('Response from MercadoPago:', response);
+
+    if (response.body && response.body.init_point) {
+      res.json({ url: response.body.init_point });
+    } else {
+      throw new Error('init_point is not defined in the response');
+    }
   } catch (error) {
     console.error('Error creating order:', error);
-    res.status(500).send('Error creating order');
+    res.status(500).json({ error: error.message });
   }
 };
 

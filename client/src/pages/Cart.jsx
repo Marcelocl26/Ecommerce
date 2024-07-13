@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
@@ -13,10 +13,12 @@ const Cart = () => {
   const [selectedAddress, setSelectedAddress] = useState('');
   const [paymentUrl, setPaymentUrl] = useState(null);
 
+  const stableFetchCartProducts = useCallback(fetchCartProducts, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchCartProducts();
+        await stableFetchCartProducts();
         const response = await axios.get('http://localhost:3000/api/addresses', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -31,7 +33,7 @@ const Cart = () => {
     };
 
     fetchData();
-  }, [fetchCartProducts]);
+  }, [stableFetchCartProducts]);
 
   useEffect(() => {
     const calculateTotalPrice = () => {

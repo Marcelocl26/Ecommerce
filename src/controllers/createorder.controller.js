@@ -1,12 +1,12 @@
-import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
+import mercadopago from 'mercadopago';
 import Order from '../models/order.model.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const client = new MercadoPagoConfig({
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
-  options: { timeout: 5000 }
+
+mercadopago.configure({
+  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN
 });
 
 export const createOrder = async (req, res) => {
@@ -25,8 +25,7 @@ export const createOrder = async (req, res) => {
     quantity: product.quantity
   }));
 
-  const preference = new Preference(client);
-  const body = {
+  const preference = {
     items: products.map(product => ({
       title: product.name,
       quantity: product.quantity,
@@ -46,7 +45,8 @@ export const createOrder = async (req, res) => {
   };
 
   try {
-    const response = await preference.create({ body });
+    const response = await mercadopago.preferences.create(preference);
+
     res.json({ url: response.body.init_point });
   } catch (error) {
     console.error('Error creating order:', error);
