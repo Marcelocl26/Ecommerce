@@ -13,24 +13,11 @@ const ProductList = () => {
 
   useEffect(() => {
     fetchCategories();
+    fetchProducts();
   }, []);
 
-  useEffect(() => {
-    if (selectedCategory !== '') {
-      axios.get(`http://localhost:3000/api/products/category/${encodeURIComponent(selectedCategory)}`)
-        .then(response => {
-          setProducts(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching products:', error);
-        });
-    } else {
-      fetchProducts();
-    }
-  }, [selectedCategory]);
-
   const fetchCategories = () => {
-    axios.get('http://localhost:3000/api/categoriess')
+    axios.get('http://localhost:3000/api/categories')
       .then(response => {
         setCategories(response.data);
       })
@@ -40,7 +27,11 @@ const ProductList = () => {
   };
 
   const fetchProducts = () => {
-    axios.get('http://localhost:3000/api/products')
+    const url = selectedCategory
+      ? `http://localhost:3000/api/products/category/${encodeURIComponent(selectedCategory)}`
+      : 'http://localhost:3000/api/products';
+
+    axios.get(url)
       .then(response => {
         setProducts(response.data);
       })
@@ -103,7 +94,7 @@ const ProductList = () => {
                 <td className="px-4 py-2 border-b">{product.name}</td>
                 <td className="px-4 py-2 border-b">{product.description}</td>
                 <td className="px-4 py-2 border-b">${product.price}</td>
-                <td className="px-4 py-2 border-b">{product.category}</td>
+                <td className="px-4 py-2 border-b">{product.category.name}</td>
                 <td className="px-4 py-2 border-b">{product.brand}</td>
                 <td className="px-4 py-2 border-b">
                   <div className="flex">

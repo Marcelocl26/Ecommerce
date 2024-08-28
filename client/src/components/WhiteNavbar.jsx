@@ -13,9 +13,7 @@ const WhiteNavbar = () => {
       <div className="flex items-center">
         {}
         <SearchBar />
-        <Link to="/cart" className="ml-4 text-gray-800">
-          Carrito
-        </Link>
+     
       </div>
     </nav>
   );

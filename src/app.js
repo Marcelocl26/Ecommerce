@@ -8,7 +8,7 @@ import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import profileRoutes from './routes/profile.routes.js';
-import categoryRoutes from './routes/category.routes.js';
+
 import favoritesRoutes from './routes/favorites.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import addressRoutes from './routes/address.routes.js';
@@ -72,7 +72,7 @@ app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', profileRoutes);
-app.use('/api', categoryRoutes);
+
 app.use('/api', favoritesRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', addressRoutes);

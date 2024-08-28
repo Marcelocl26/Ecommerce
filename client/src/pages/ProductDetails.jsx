@@ -17,7 +17,9 @@ const ProductDetails = () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/products/${id}`);
         setProduct(response.data);
-        setSelectedImage(response.data.images[0]);
+        if (response.data.images.length > 0) {
+          setSelectedImage(response.data.images[0]);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error al obtener los detalles del producto:', error);
@@ -59,6 +61,10 @@ const ProductDetails = () => {
     return <div className="text-center">No se encontró el producto</div>;
   }
 
+  // Asegúrate de que product.category y product.brand sean cadenas
+  const category = typeof product.category === 'string' ? product.category : product.category?.name || 'Desconocida';
+  const brand = typeof product.brand === 'string' ? product.brand : product.brand?.name || 'Desconocida';
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
@@ -86,8 +92,8 @@ const ProductDetails = () => {
         <div className="md:w-1/2 md:pl-6">
           <p className="text-lg mb-4">{product.description}</p>
           <p className="text-2xl font-semibold mb-4">Precio: ${product.price}</p>
-          <p className="text-lg mb-2">Categoría: {product.category}</p>
-          <p className="text-lg mb-2">Marca: {product.brand}</p>
+          <p className="text-lg mb-2">Categoría: {category}</p>
+          <p className="text-lg mb-2">Marca: {brand}</p>
           <p className="text-lg mb-4">Disponibilidad: {product.countInStock > 0 ? 'En stock' : 'Agotado'}</p>
           <p className="text-lg mb-4">Valoración: {product.rating} ({product.numReviews} reseñas)</p>
           <div className="flex items-center mb-4">

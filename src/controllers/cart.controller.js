@@ -1,21 +1,24 @@
-import Product from '../models/product.model.js';
+import { Product } from '../models/product.model.js';
 import Cart from '../models/cart.model.js';
 
 export const getCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user._id }).populate('products.product');
-    console.log(cart); 
+    const cart = await Cart.findOne({ userId: req.user._id })
+      .populate({
+        path: 'products.product',
+        select: 'name price images' // Selecciona los campos necesarios, incluyendo 'images'
+      });
+    
     res.json(cart);
   } catch (error) {
     console.error('Error al obtener el carrito:', error);
     res.status(500).json({ message: "Error al obtener el carrito" });
   }
 };
-
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body; 
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).select('name price images'); // Selecciona los campos necesarios
 
     if (!product) {
       return res.status(404).json({ message: 'Producto no encontrado' });
@@ -33,7 +36,10 @@ export const addToCart = async (req, res) => {
         },
       },
       { new: true, upsert: true }
-    ).populate('products.product');
+    ).populate({
+      path: 'products.product',
+      select: 'name price images' // Selecciona los campos necesarios, incluyendo 'images'
+    });
 
     res.json(cart);
   } catch (error) {
@@ -41,6 +47,7 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ message: "Error al agregar al carrito" });
   }
 };
+
 
 export const removeFromCart = async (req, res) => {
   try {

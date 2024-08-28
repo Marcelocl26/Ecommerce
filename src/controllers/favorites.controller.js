@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import Product from '../models/product.model.js';
+import { Product } from '../models/product.model.js';
 
 // Agregar producto a favoritos
 export const addFavorite = async (req, res) => {

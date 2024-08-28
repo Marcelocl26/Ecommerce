@@ -9,27 +9,38 @@ const AddProductForm = () => {
     description: '',
     price: 0,
     category: '',
-    brand: '',
+    subcategory: '',
     images: [],
     countInStock: 0,
-    rating: 0,
-    numReviews: 0,
+    featured: false,
   });
 
   const [categories, setCategories] = useState([]);
-
-  const loadCategories = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/categoriess');
-      setCategories(response.data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
+  const [subcategories, setSubcategories] = useState([]);
 
   useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
     loadCategories();
   }, []);
+
+  const handleCategoryChange = async (event) => {
+    const { value } = event.target;
+    setProductData({ ...productData, category: value });
+
+    try {
+      const response = await axios.get(`http://localhost:3000/api/categories/${value}/subcategories`);
+      setSubcategories(response.data);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -64,16 +75,15 @@ const AddProductForm = () => {
     formData.append('name', productData.name);
     formData.append('description', productData.description);
     formData.append('price', productData.price);
-    formData.append('category', productData.category); 
-    formData.append('brand', productData.brand);
-    productData.images.forEach((image, index) => {
-      formData.append(`images`, image);
-    });
+    formData.append('category', productData.category);
+    formData.append('subcategory', productData.subcategory);
     formData.append('countInStock', productData.countInStock);
-    formData.append('rating', productData.rating);
-    formData.append('numReviews', productData.numReviews);
+    formData.append('featured', productData.featured); // Campo de destacado
 
-    const token = localStorage.getItem('token');
+    productData.images.forEach((image) => {
+      formData.append('images', image);
+    });
+
     try {
       const response = await axios.post('http://localhost:3000/api/products', formData, {
         headers: {
@@ -82,34 +92,109 @@ const AddProductForm = () => {
         },
       });
       console.log('Producto agregado:', response.data);
-    
     } catch (error) {
       console.error('Error al agregar producto:', error);
-      
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="name" value={productData.name} onChange={handleChange} placeholder="Nombre del producto" required />
-      <textarea name="description" value={productData.description} onChange={handleChange} placeholder="Descripción del producto" required />
-      <input type="number" name="price" value={productData.price} onChange={handleChange} placeholder="Precio" required />
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg">
+      <div className="mb-4">
+        <label htmlFor="name" className="block text-gray-700">Nombre del producto</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={productData.name}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          placeholder="Nombre del producto"
+          required
+        />
+      </div>
 
-      <select name="category" value={productData.category} onChange={handleChange} required>
-        <option value="">Selecciona una categoría</option>
-        {categories.map((category) => (
-          <option key={category._id} value={category.name}>{category.name}</option>
-        ))}
-      </select>
+      <div className="mb-4">
+        <label htmlFor="description" className="block text-gray-700">Descripción del producto</label>
+        <textarea
+          id="description"
+          name="description"
+          value={productData.description}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          placeholder="Descripción del producto"
+          required
+        />
+      </div>
 
-      <input type="text" name="brand" value={productData.brand} onChange={handleChange} placeholder="Marca" required />
-      <input type="file" onChange={handleImageChange} accept="image/*" multiple required />
-      
+      <div className="mb-4">
+        <label htmlFor="price" className="block text-gray-700">Precio</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          value={productData.price}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          placeholder="Precio"
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="category" className="block text-gray-700">Categoría</label>
+        <select
+          id="category"
+          name="category"
+          value={productData.category}
+          onChange={handleCategoryChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          required
+        >
+          <option value="">Selecciona una categoría</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>{category.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="subcategory" className="block text-gray-700">Subcategoría</label>
+        <select
+          id="subcategory"
+          name="subcategory"
+          value={productData.subcategory}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          required
+        >
+          <option value="">Selecciona una subcategoría</option>
+          {subcategories.map((subcategory) => (
+            <option key={subcategory._id} value={subcategory._id}>{subcategory.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="images" className="block text-gray-700">Imágenes del producto</label>
+        <input
+          type="file"
+          id="images"
+          onChange={handleImageChange}
+          accept="image/*"
+          multiple
+          className="w-full px-3 py-2 border rounded-lg"
+        />
+      </div>
+
       {productData.images.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-4">
+        <div className="mb-4 flex flex-wrap gap-4">
           {productData.images.map((image, index) => (
             <div key={index} className="relative">
-              <img src={URL.createObjectURL(image)} alt={`Imagen ${index + 1}`} className="w-32 h-32 object-cover" />
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`Imagen ${index + 1}`}
+                className="w-32 h-32 object-cover rounded-lg"
+              />
               <button
                 type="button"
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
@@ -122,11 +207,33 @@ const AddProductForm = () => {
         </div>
       )}
 
-      <input type="number" name="countInStock" value={productData.countInStock} onChange={handleChange} placeholder="Cantidad en stock" required />
-      <input type="number" name="rating" value={productData.rating} onChange={handleChange} placeholder="Rating" required />
-      <input type="number" name="numReviews" value={productData.numReviews} onChange={handleChange} placeholder="Número de reviews" required />
+      <div className="mb-4">
+        <label htmlFor="countInStock" className="block text-gray-700">Cantidad en stock</label>
+        <input
+          type="number"
+          id="countInStock"
+          name="countInStock"
+          value={productData.countInStock}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg"
+          placeholder="Cantidad en stock"
+          required
+        />
+      </div>
 
-      <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+      <div className="mb-4">
+        <label htmlFor="featured" className="block text-gray-700">Destacado</label>
+        <input
+          type="checkbox"
+          id="featured"
+          name="featured"
+          checked={productData.featured}
+          onChange={(e) => setProductData({ ...productData, featured: e.target.checked })}
+          className="w-6 h-6"
+        />
+      </div>
+
+      <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
         Agregar Producto
       </button>
     </form>

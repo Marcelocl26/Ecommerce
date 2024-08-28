@@ -106,13 +106,21 @@ const Cart = () => {
       <ul className="space-y-4">
         {cart.map(item => (
           <li key={item.product._id} className="border p-4 rounded shadow-lg flex flex-col md:flex-row items-center md:items-start">
+            <img 
+              src={`http://localhost:3000/${item.product.images[0]}`} 
+              alt={item.product.name} 
+              className="w-32 h-32 object-cover mr-4" 
+            />
             <div className="flex-1">
               <p className="text-lg font-semibold">{item.product.name}</p>
               <p className="text-sm text-gray-600">Precio unitario: ${item.product.price.toFixed(2)}</p>
               <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
               <p className="text-sm text-gray-600">Precio total: ${(item.product.price * item.quantity).toFixed(2)}</p>
             </div>
-            <button onClick={() => handleRemoveFromCart(item.product._id)} className="bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-600 transition duration-300">
+            <button 
+              onClick={() => handleRemoveFromCart(item.product._id)} 
+              className="bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-600 transition duration-300"
+            >
               Eliminar
             </button>
           </li>
